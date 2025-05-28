@@ -1,33 +1,29 @@
-def find_parent(parent, x):
-    if parent[x] != x:
-        parent[x] = find_parent(parent, parent[x])
-    return parent[x]
+def solution(k, operations):
+    parent = [i for i in range(k)] # 각 노드의 부모노드는 자기 자신
+    def find(x):
+        if parent[x] != x:
+            parent[x] = find(parent[x])
+        return parent[x]
 
-def union_parent(parent, a, b):
-    a = find_parent(parent, a)
-    b = find_parent(parent, b)
-    if a < b:
-        parent[a] = b
-    else:
-        parent[b] = a
+    def union(x, y):
+        a = find(x)
+        b = find(y)
+
+        if a < b: # 루트 노드가 다르면 다른 집합
+            parent[b] = a
+        else:
+            parent[a] = b
+
+    for operation in operations:
+        if operation[0] == 'f':
+            root = find(operation[1])
+        elif operation[0] == 'u':
+            root = union(operation[1], operation[2])
+
+    return len(set(find(i) for i in parent))
 
 
-v, e = map(int, input().split())
-parent = [0] * (v + 1)
 
-for i in range(1, v + 1):
-    parent[i] = i
-
-for i in range(e):
-    a, b = map(int, input().split())
-    union_parent(parent, a, b)
-
-print('각 원소가 속한 집합: ', end='')
-for i in range(1, v + 1):
-    print(find_parent(parent, i), end=' ')
-
-print()
-
-print('부모 테이블', end='')
-for i in range(1, v + 1):
-    print(parent[i], end=' ')
+if __name__ == '__main__':
+    print(solution(3, [['u', 0, 1], ['u', 1, 2], ['f', 2]]))
+    print(solution(4, [['u', 0, 1], ['u', 2, 3], ['f', 0]]))
