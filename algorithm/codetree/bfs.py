@@ -1,47 +1,46 @@
 from collections import deque
 
-graph = [[] for _ in range(13 + 1)]
+n, m = map(int, input().split())
+grid = [list(map(int, input().split())) for _ in range(n)]
 
-edges = [
-    (1, 3),
-    (1, 4),
-    (2, 1),
-    (2, 6),
-    (3, 2),
-    (4, 3),
-    (4, 7),
-    (5, 3),
-    (5, 4),
-    (5, 9),
-    (6, 8),
-    (7, 5),
-    (8, 5),
-    (8, 11),
-    (9, 8),
-    (9, 10),
-    (10, 12),
-    (11, 13),
-    (12, 13)
-]
+# Please write your code here.
+dxs = [1, 0, -1, 0]
+dys = [0, 1, 0, -1]
 
-for u, v in edges:
-    graph[u].append(v)
+def bfs(x, y, visited):
+    q = deque([(x, y)])
+    visited[x][y] = True
 
-q = deque([1])
+    while q:
+        cx, cy = q.popleft()
+        for dx, dy in zip(dxs, dys):
+            nx, ny = cx + dx, cy + dy
+            if not in_range(nx, ny): continue
+            if visited[nx][ny]: continue
+            if grid[nx][ny] <= k: continue
+            visited[nx][ny] = True
+            q.append((nx, ny))
 
-dist = [-1] * (13 + 1)
-dist[1] = 0
+def in_range(x, y):
+    return 0 <= x < n and 0 <= y < m
 
-while q:
-    now = q.popleft()
+max_height = 0
+for i in range(n):
+    for j in range(m):
+        max_height = max(max_height, grid[i][j])
 
-    for nxt in graph[now]:
-        if dist[nxt] == -1:
-            dist[nxt] = dist[now] + 1
+max_k = -1
+max_count = -1
+for k in range(1, max_height + 1):
+    visited = [[False] * m for _ in range(n)]
+    count = 0
+    for x in range(n):
+        for y in range(m):
+            if not visited[x][y] and grid[x][y] > k:
+                bfs(x, y, visited)
+                count += 1
+    if max_count < count:
+        max_count = count
+        max_k = k
 
-            q.append(nxt)
-
-
-print(dist)
-
-
+print(max_k, max_count)
