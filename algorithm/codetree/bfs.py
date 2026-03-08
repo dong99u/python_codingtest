@@ -1,46 +1,44 @@
 from collections import deque
 
-n, m = map(int, input().split())
-grid = [list(map(int, input().split())) for _ in range(n)]
-
-# Please write your code here.
 dxs = [1, 0, -1, 0]
 dys = [0, 1, 0, -1]
 
-def bfs(x, y, visited):
-    q = deque([(x, y)])
-    visited[x][y] = True
+def in_range(x, y):
+    return 0 <= x < n and 0 <= y < n
+
+def can_move(x, y, dist):
+    return in_range(x, y) and grid[x][y] == 1 and dist[x][y] == -1
+
+def bfs(q):
+    dist = [[-1] * n for _ in range(n)]
+    for x, y in q:
+        dist[x][y] = 0
 
     while q:
         cx, cy = q.popleft()
         for dx, dy in zip(dxs, dys):
             nx, ny = cx + dx, cy + dy
-            if not in_range(nx, ny): continue
-            if visited[nx][ny]: continue
-            if grid[nx][ny] <= k: continue
-            visited[nx][ny] = True
-            q.append((nx, ny))
+            if can_move(nx, ny, dist):
+                dist[nx][ny] = dist[cx][cy] + 1
+                q.append((nx, ny))
 
-def in_range(x, y):
-    return 0 <= x < n and 0 <= y < m
+    return dist
 
-max_height = 0
+
+n, k = map(int, input().split())
+grid = [list(map(int, input().split())) for _ in range(n)]
+
+q = deque()
 for i in range(n):
-    for j in range(m):
-        max_height = max(max_height, grid[i][j])
+    for j in range(n):
+        if grid[i][j] == 2:
+            q.append((i, j))
+dist = bfs(q)
 
-max_k = -1
-max_count = -1
-for k in range(1, max_height + 1):
-    visited = [[False] * m for _ in range(n)]
-    count = 0
-    for x in range(n):
-        for y in range(m):
-            if not visited[x][y] and grid[x][y] > k:
-                bfs(x, y, visited)
-                count += 1
-    if max_count < count:
-        max_count = count
-        max_k = k
+for i in range(n):
+    for j in range(n):
+        if grid[i][j] == 1 and dist[i][j] == -1:
+            dist[i][j] = -2
 
-print(max_k, max_count)
+for row in dist:
+    print(*row)
