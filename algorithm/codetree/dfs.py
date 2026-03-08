@@ -1,5 +1,5 @@
-n = int(input())
 grid = [list(map(int, input().split())) for _ in range(n)]
+r, c = map(int, input().split())
 
 # Please write your code here.
 dxs = [1, 0, -1, 0]
