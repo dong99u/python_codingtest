@@ -1,21 +1,17 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
+n, m = map(int, input().split())
 grid = [list(map(int, input().split())) for _ in range(n)]
 
-dp = [[0] * n for _ in range(n)]
-dp[0][0] = grid[0][0]
+dp = [[0] * m for _ in range(n)]
+dp[0][0] = 1
 
 for i in range(n):
-    for j in range(n):
-        if i == 0 and j == 0:
-            continue
-        if i == 0:
-            dp[i][j] = max(dp[i][j - 1], grid[i][j])
-        if j == 0:
-            dp[i][j] = max(dp[i - 1][j], grid[i][j])
-        if i > 0 and j > 0:
-            dp[i][j] = max(min(dp[i - 1][j], dp[i][j - 1]), grid[i][j])
+    for j in range(m):
+        for pi in range(i):        # 모든 윗행
+            for pj in range(j):    # 모든 왼쪽열
+                if grid[pi][pj] < grid[i][j] and dp[pi][pj] > 0:
+                    dp[i][j] = max(dp[i][j], dp[pi][pj] + 1)
 
-print(dp[n - 1][n - 1])
+print(max(dp[i][j] for i in range(n) for j in range(m)))
