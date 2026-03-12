@@ -15,3 +15,5 @@ for i in range(1, n):
         dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
 
 print(dp[n - 1][n - 1])
+
+print(dp[-1] if dp[-1] != INF else -1)
