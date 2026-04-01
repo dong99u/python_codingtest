@@ -1,15 +1,24 @@
 import sys
 input = sys.stdin.readline
 
-N, M = map(int, input().split())
-w, v = zip(*[tuple(map(int, input().split())) for _ in range(N)])
-w, v = list(w), list(v)
+INF = float('inf')
 
-dp = [0] * (M + 1)
+n = int(input())
+arr = list(map(int, input().split()))
+total_sum = sum(arr)
 
-for i in range(N):
-    for j in range(M + 1):
-        if w[i] <= j:
-            dp[j] = max(dp[j], dp[j - w[i]] + v[i])
+dp = [-1] * (total_sum + 1)
+dp[0] = 0
 
-print(dp[M])
+for i in range(n):
+    for j in range(total_sum, 0, -1):
+        if dp[j - arr[i]] != -1:
+            dp[j] = dp[j - arr[i]] + 1
+
+answer = 0
+
+for i in range(total_sum + 1):
+    if dp[i] >= 2:
+        answer = max(answer, dp[i])
+
+print(answer)
