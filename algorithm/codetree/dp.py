@@ -11,15 +11,7 @@ total_sum = sum(arr)
 memo = {}
 
 
-def backtrack(idx, acc):
-    state = (idx, acc)
-    B = total_sum - acc
-    if state in memo:
-        return memo[state]
-    if idx == n:
-        if acc == 0 or acc == total_sum:
-            return INF
-        return abs(acc - B)
+dp = [0] * (M + 1)
 
     result = INF
     result = min(result, min(backtrack(idx + 1, acc + arr[idx]), backtrack(idx + 1, acc)))
