@@ -16,7 +16,7 @@ def solution(k, operations):
             return
 
         if rank[x] < rank[y]:
-            parent[x] = parent[y]
+            parent[x] = y
         elif rank[x] > rank[y]:
             parent[y] = x
         else:
