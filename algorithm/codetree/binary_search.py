@@ -11,6 +11,7 @@ def upper_bound(target):
         if arr[mid] > target:
             right = mid - 1
             min_idx = min(min_idx, mid)
+            right = mid - 1
         else:
             left = mid + 1
 
@@ -24,6 +25,7 @@ def lower_bound(target):
         if arr[mid] >= target:
             right = mid - 1
             min_idx = min(min_idx, mid)
+            right = mid - 1
         else:
             left = mid + 1
 
