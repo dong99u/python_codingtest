@@ -1,21 +1,30 @@
 import sys; input = lambda: sys.stdin.readline().rstrip()
 
-INF = sys.maxsize
-
 n = int(input())
-arr = [0] + list(map(int, input().split()))
+a = list(map(int, input().split()))
+b = list(map(int, input().split()))
 
-dp = [[-INF] * 4 for _ in range(n + 1)]
+dp = [[-1] * (n + 1) for _ in range(n + 1)]
 dp[0][0] = 0
-dp[1][1] = arr[1]
 
-for i in range(2, n + 1):
-    # 두 칸 전에서 점프
-    for j in range(4):
-        dp[i][j] = max(dp[i][j], dp[i - 2][j] + arr[i])
+for i in range(n):
+    for j in range(n):
+        if dp[i][j] == -1:
+            continue
 
-    # 한 칸 전에서 점프
-    for j in range(1, 4):
-        dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + arr[i])
+        # 카드 버리기 (같을 때 대결도 동일)
+        dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j])
 
-print(max(dp[n]))
+        # 상대 카드가 더 작은 경우 → 상대 카드 버려짐
+        if a[i] < b[j]:
+            dp[i + 1][j] = max(dp[i + 1][j], dp[i][j])
+
+        # 남우 카드가 더 작은 경우 → 남우 점수 획득
+        if a[i] > b[j]:
+            dp[i][j + 1] = max(dp[i][j + 1], dp[i][j] + b[j])
+
+ans = 0
+for i in range(n + 1):
+    ans = max(ans, dp[i][n], dp[n][i])
+
+print(ans)
